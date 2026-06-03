@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const path = require("path");
 
 // Load environment variables
 dotenv.config();
@@ -9,21 +10,22 @@ dotenv.config();
 const app = express();
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:3000",
+  credentials: true,
+}));
+
 app.use(express.json({ limit: "10mb" }));
-app.use("/uploads", express.static("uploads"));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// ─── Serve uploaded images ────────────────────────────────────────────────────
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/posts", require("./routes/posts"));
 
-// Health check endpoint
+// Health Check
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Social App API is running" });
 });
