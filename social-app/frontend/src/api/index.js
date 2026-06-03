@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Base axios instance — reads API URL from environment variable
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
+  baseURL: process.env.REACT_APP_API_URL || "https://socialfeed-application.onrender.com/api",
 });
 
 // Attach JWT token to every request automatically
