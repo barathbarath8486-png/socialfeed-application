@@ -52,7 +52,7 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
 
   // Build image URL pointing to our local uploads folder
   const imageUrl = req.file
-     ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+      ? `https://socialfeed-application.onrender.com/uploads/${req.file.filename}`
       : "";
 
   if (!text?.trim() && !imageUrl) {
