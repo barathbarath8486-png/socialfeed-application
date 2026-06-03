@@ -52,8 +52,8 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
 
   // Build image URL pointing to our local uploads folder
   const imageUrl = req.file
-    ? `http://localhost:5000/uploads/${req.file.filename}`
-    : "";
+     ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+      : "";
 
   if (!text?.trim() && !imageUrl) {
     return res.status(400).json({ message: "Post must have text or an image" });
