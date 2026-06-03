@@ -50,10 +50,9 @@ router.get("/:id", async (req, res) => {
 router.post("/", protect, upload.single("image"), async (req, res) => {
   const { text } = req.body;
 
-  // Build image URL pointing to our local uploads folder
   const imageUrl = req.file
-      ? `https://socialfeed-application.onrender.com/uploads/${req.file.filename}`
-      : "";
+    ? `https://socialfeed-application.onrender.com/uploads/${req.file.filename}`
+    : "";
 
   if (!text?.trim() && !imageUrl) {
     return res.status(400).json({ message: "Post must have text or an image" });
@@ -87,10 +86,10 @@ router.delete("/:id", protect, async (req, res) => {
       return res.status(403).json({ message: "Not authorized to delete this post" });
     }
 
-    // Delete local image file if exists
+    // FIX: Use absolute path resolved from this file's directory
     if (post.imageUrl) {
       const filename = path.basename(post.imageUrl);
-      const filePath = path.join("uploads", filename);
+      const filePath = path.join(__dirname, "..", "uploads", filename);
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
 
@@ -135,7 +134,7 @@ router.put("/:id/like", protect, async (req, res) => {
   }
 });
 
-// ─── POST /api/posts/:id/comment ──────────────────────────────────────────────
+// ─── POST /api/posts/:id/comment ─────────────────────────────────────────────
 router.post(
   "/:id/comment",
   protect,
@@ -177,7 +176,7 @@ router.post(
   }
 );
 
-// ─── DELETE /api/posts/:postId/comment/:commentId ─────────────────────────────
+// ─── DELETE /api/posts/:postId/comment/:commentId ────────────────────────────
 router.delete("/:postId/comment/:commentId", protect, async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
